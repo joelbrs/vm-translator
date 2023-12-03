@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Parser {
 
-    private List<String[]> commands = new ArrayList<>();
+    private final List<String[]> commands;
 
     public Parser(String input) {
         final String EOL = System.getProperty("line.separator");
