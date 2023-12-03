@@ -21,5 +21,7 @@ public class Parser {
         return !commands.isEmpty();
     }
 
-    //TODO: nextCommand
+    public Command nextCommand() {
+        return new Command();
+    }
 }
