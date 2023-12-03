@@ -1,6 +1,5 @@
 @10 // push constant 10
 D=A
-D=M
 @SP
 A=M
 M=D
@@ -21,7 +20,6 @@ A=M
 M=D
 @21 // push constant 21
 D=A
-D=M
 @SP
 A=M
 M=D
@@ -29,7 +27,6 @@ M=D
 M=M+1
 @22 // push constant 22
 D=A
-D=M
 @SP
 A=M
 M=D
@@ -63,7 +60,6 @@ A=M
 M=D
 @36 // push constant 36
 D=A
-D=M
 @SP
 A=M
 M=D
@@ -84,7 +80,6 @@ A=M
 M=D
 @42 // push constant 42
 D=A
-D=M
 @SP
 A=M
 M=D
@@ -92,7 +87,6 @@ M=D
 M=M+1
 @45 // push constant 45
 D=A
-D=M
 @SP
 A=M
 M=D
@@ -126,7 +120,6 @@ A=M
 M=D
 @510 // push constant 510
 D=A
-D=M
 @SP
 A=M
 M=D
@@ -213,7 +206,6 @@ D=M
 A=A-1
 M=M-D
 @R11 // push temp 6
-D=M
 D=M
 @SP
 A=M
