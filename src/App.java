@@ -56,6 +56,15 @@ public class App {
                 case POP:
                     code.writePop(command.getArgs().get(0), Integer.parseInt(command.getArgs().get(1)));
                     break;
+                case GOTO:
+                    code.writeGoto(command.getArgs().get(0));
+                    break;
+                case IF:
+                    code.writeIf(command.getArgs().get(0));
+                    break;
+                case LABEL:
+                    code.writeLabel(command.getArgs().get(0));
+                    break;
                 default:
                     System.out.println(command.getType().toString() + " not implemented");
             }
