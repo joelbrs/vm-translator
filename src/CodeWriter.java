@@ -35,6 +35,7 @@ public class CodeWriter implements WriteUtils {
         write(output, "D=A");
         write(output, "@SP");
         write(output, "M=D");
+        writeCall("Sys.init", 0);
     }
 
     public void writePush(String segment, int index) {
