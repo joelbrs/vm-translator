@@ -53,8 +53,8 @@ public class CodeWriter implements WriteUtils {
             write(output, "D=M");
             write(output, "@" + index);
             write(output, "A=D+A");
+            write(output, "D=M");
         }
-        write(output, "D=M");
         write(output, "@SP");
         write(output, "A=M");
         write(output, "M=D");

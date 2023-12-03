@@ -81,7 +81,7 @@ public class App {
     }
 
     public static void main(String[] args) {
-        String path = "projects\\07\\MemoryAccess\\BasicTest";
+        String path = "C:\\Users\\Administrator\\Documents\\ufma\\Compilers\\vm-translator\\projects\\07\\StackArithmetic\\StackTest";
 
         File file = new File(path);
 
