@@ -7,12 +7,18 @@ import java.io.IOException;
 public class CodeWriter implements WriteUtils {
 
     private final StringBuilder output = new StringBuilder();
-    private final String moduleName = "Main";
+    private String moduleName = "Main";
     private String outputFileName;
     private Integer labelCount = 0, callCount = 0;
 
     public CodeWriter(String fileName) {
         outputFileName = fileName;
+    }
+
+    void setFileName(String s) {
+        moduleName = s.substring(0, s.indexOf("."));
+        moduleName = moduleName.substring(s.lastIndexOf("/") + 1);
+        System.out.println(moduleName);
     }
 
     public String registerName(String segment, int index) {
@@ -266,6 +272,98 @@ public class CodeWriter implements WriteUtils {
         write(output, "M=D");
         write(output, "@SP");
         write(output, "M=M+1");
+    }
+
+    void  writeCall(String funcName , int numArgs) {
+        var comment = String.format("// call %s %d", funcName, numArgs);
+
+        var returnAddr = String.format("%s_RETURN_%d", funcName, callCount);
+        callCount++;
+
+        write(output, String.format("@%s %s", returnAddr, comment)); // push return-addr
+        write(output, "D=A");
+        write(output, "@SP");
+        write(output, "A=M");
+        write(output, "M=D");
+        write(output, "@SP");
+        write(output, "M=M+1");
+
+        writeFramePush("LCL");
+        writeFramePush("ARG");
+        writeFramePush("THIS");
+        writeFramePush("THAT");
+
+        write(output, String.format("@%d", numArgs)); // ARG = SP-n-5
+        write(output, "D=A");
+        write(output, "@5");
+        write(output, "D=D+A");
+        write(output, "@SP");
+        write(output, "D=M-D");
+        write(output, "@ARG");
+        write(output, "M=D");
+
+        write(output, "@SP") ;// LCL = SP
+        write(output, "D=M");
+        write(output, "@LCL");
+        write(output, "M=D");
+
+        writeGoto(funcName);
+
+        write(output, "(" + returnAddr + ")"); // (return-address)
+
+    }
+
+    void  writeReturn() {
+        write(output, "@LCL"); // FRAME = LCL
+        write(output, "D=M");
+
+        write(output, "@R13"); // R13 -> FRAME
+        write(output, "M=D");
+
+        write(output, "@5") ;// RET = *(FRAME-5)
+        write(output, "A=D-A");
+        write(output, "D=M");
+        write(output, "@R14"); // R14 -> RET
+        write(output, "M=D");
+
+        write(output, "@SP") ;// *ARG = pop()
+        write(output, "AM=M-1");
+        write(output, "D=M");
+        write(output, "@ARG");
+        write(output, "A=M");
+        write(output, "M=D");
+
+        write(output, "D=A"); // SP = ARG+1
+        write(output, "@SP");
+        write(output, "M=D+1");
+
+        write(output, "@R13"); // THAT = *(FRAME-1)
+        write(output, "AM=M-1");
+        write(output, "D=M");
+        write(output, "@THAT");
+        write(output, "M=D");
+
+        write(output, "@R13") ;// THIS = *(FRAME-2)
+        write(output, "AM=M-1");
+        write(output, "D=M");
+        write(output, "@THIS");
+        write(output, "M=D");
+
+        write(output, "@R13"); // ARG = *(FRAME-3)
+        write(output, "AM=M-1");
+        write(output, "D=M");
+        write(output, "@ARG");
+        write(output, "M=D");
+
+        write(output, "@R13") ;// LCL = *(FRAME-4)
+        write(output, "AM=M-1");
+        write(output, "D=M");
+        write(output, "@LCL");
+        write(output, "M=D");
+
+        write(output, "@R14"); // goto RET
+        write(output, "A=M");
+        write(output, "0;JMP");
     }
 
     public String codeOutput() {
