@@ -34,21 +34,26 @@ public class CodeWriter implements WriteUtils {
     public void writePush(String segment, int index) {
         Segments seg = Segments.getSegment(segment.toLowerCase());
 
-        if (seg != null && Segments.isVariableSegment(seg)) {
-            seg.writePushSegment(output, index);
-            return;
+        if (seg != null && (Segments.isVariableSegment(seg) || seg.equals(Segments.CONSTANT))) {
+            if (Segments.isVariableSegment(seg)) {
+                write(output, "@" + registerName(segment, index) + " // push " + segment + " " + index);
+                write(output, "D=M");
+            } else {
+                write(output, "@" + index + " // push " + segment + " " + index);
+                write(output, "D=A");
+            }
+        } else {
+            write(output, "@" + registerName(segment, 0) + " // push " + segment + " " + index);
+            write(output, "D=M");
+            write(output, "@" + index);
+            write(output, "A=D+A");
         }
-
-        write(output,"@" + registerName(segment,0) + " // push " + seg + " " + index);
-        write(output,"D=M");
-        write(output,"@" + index);
-        write(output,"A=D+A");
-        write(output,"D=M");
-        write(output,"@SP");
-        write(output,"A=M");
-        write(output,"M=D");
-        write(output,"@SP");
-        write(output,"M=M+1");
+        write(output, "D=M");
+        write(output, "@SP");
+        write(output, "A=M");
+        write(output, "M=D");
+        write(output, "@SP");
+        write(output, "M=M+1");
     }
 
 
@@ -56,27 +61,30 @@ public class CodeWriter implements WriteUtils {
         Segments seg = Segments.getSegment(segment.toLowerCase());
 
         if (seg != null && Segments.isDataSegment(seg)) {
-            seg.writePopSegment(output, index);
-            return;
+            write(output, "@SP // pop " + segment + " " + index);
+            write(output, "M=M-1");
+            write(output, "A=M");
+            write(output, "D=M");
+            write(output, "@" + registerName(segment, index));
+            write(output, "M=D");
+        } else {
+            write(output, "@" + registerName(segment, 0) + " // pop " + segment + " " + index);
+            write(output, "D=M");
+            write(output, "@" + index);
+            write(output, "D=D+A");
+            write(output, "@R13");
+            write(output, "M=D");
+            write(output, "@SP");
+            write(output, "M=M-1");
+            write(output, "A=M");
+            write(output, "D=M");
+            write(output, "@R13");
+            write(output, "A=M");
+            write(output, "M=D");
         }
-
-        write(output, "@" + registerName(segment, 0) + " // pop " + seg + " " + index);
-        write(output, "D=M");
-        write(output, "@" + index);
-        write(output, "D=D+A");
-        write(output, "@R13");
-        write(output, "M=D");
-        write(output, "@SP");
-        write(output, "M=M-1");
-        write(output, "A=M");
-        write(output, "D=M");
-        write(output, "@R13");
-        write(output, "A=M");
-        write(output, "M=D");
     }
 
-    void writeArithmeticAdd()
-    {
+    void writeArithmeticAdd() {
         write(output, "@SP // add");
         write(output, "M=M-1");
         write(output, "A=M");
@@ -85,8 +93,7 @@ public class CodeWriter implements WriteUtils {
         write(output, "M=D+M");
     }
 
-    void writeArithmeticSub()
-    {
+    void writeArithmeticSub() {
         write(output, "@SP // sub");
         write(output, "M=M-1");
         write(output, "A=M");
@@ -95,8 +102,7 @@ public class CodeWriter implements WriteUtils {
         write(output, "M=M-D");
     }
 
-    void writeArithmeticNeg()
-    {
+    void writeArithmeticNeg() {
         write(output, "@SP // neg");
         write(output, "A=M");
         write(output, "A=A-1");
@@ -104,8 +110,7 @@ public class CodeWriter implements WriteUtils {
     }
 
 
-    void writeArithmeticAnd()
-    {
+    void writeArithmeticAnd() {
         write(output, "@SP // and");
         write(output, "AM=M-1");
         write(output, "D=M");
@@ -113,8 +118,7 @@ public class CodeWriter implements WriteUtils {
         write(output, "M=D&M");
     }
 
-    void writeArithmeticOr()
-    {
+    void writeArithmeticOr() {
         write(output, "@SP // or");
         write(output, "AM=M-1");
         write(output, "D=M");
@@ -122,8 +126,7 @@ public class CodeWriter implements WriteUtils {
         write(output, "M=D|M");
     }
 
-    void writeArithmeticNot()
-    {
+    void writeArithmeticNot() {
 
         write(output, "@SP // not");
         write(output, "A=M");
@@ -132,9 +135,8 @@ public class CodeWriter implements WriteUtils {
     }
 
 
-    void writeArithmeticEq()
-    {
-        String label=("JEQ_" + moduleName + "_" + (labelCount));
+    void writeArithmeticEq() {
+        String label = ("JEQ_" + moduleName + "_" + (labelCount));
         write(output, "@SP // eq");
         write(output, "AM=M-1");
         write(output, "D=M");
@@ -155,10 +157,9 @@ public class CodeWriter implements WriteUtils {
         labelCount++;
     }
 
-    void writeArithmeticGt()
-    {
-        String labelTrue=("JGT_TRUE_" + moduleName + "_" + (labelCount));
-        String labelFalse=("JGT_FALSE_" + moduleName + "_" + (labelCount));
+    void writeArithmeticGt() {
+        String labelTrue = ("JGT_TRUE_" + moduleName + "_" + (labelCount));
+        String labelFalse = ("JGT_FALSE_" + moduleName + "_" + (labelCount));
 
         write(output, "@SP // gt");
         write(output, "AM=M-1");
@@ -183,8 +184,7 @@ public class CodeWriter implements WriteUtils {
         labelCount++;
     }
 
-    void writeArithmeticLt()
-    {
+    void writeArithmeticLt() {
         String labelTrue = ("JLT_TRUE_" + moduleName + "_" + (labelCount));
         String labelFalse = ("JLT_FALSE_" + moduleName + "_" + (labelCount));
 
@@ -211,16 +211,16 @@ public class CodeWriter implements WriteUtils {
         labelCount++;
     }
 
-    void  writeLabel(String label ) {
+    void writeLabel(String label) {
         write(output, "(" + label + ")");
     }
 
-    void  writeGoto(String label) {
+    void writeGoto(String label) {
         write(output, "@" + label);
         write(output, "0;JMP");
     }
 
-    void  writeIf(String label ) {
+    void writeIf(String label) {
         write(output, "@SP");
         write(output, "AM=M-1");
         write(output, "D=M");
@@ -230,7 +230,7 @@ public class CodeWriter implements WriteUtils {
 
     }
 
-    void  writeFunction(String funcName , int nLocals ) {
+    void writeFunction(String funcName, int nLocals) {
 
         var loopLabel = funcName + "_INIT_LOCALS_LOOP";
         var loopEndLabel = funcName + "_INIT_LOCALS_END";
@@ -258,7 +258,7 @@ public class CodeWriter implements WriteUtils {
         write(output, "(" + loopEndLabel + ")");
     }
 
-    void  writeFramePush(String value) {
+    void writeFramePush(String value) {
         write(output, "@" + value);
         write(output, "D=M");
         write(output, "@SP");

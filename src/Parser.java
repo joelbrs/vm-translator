@@ -4,17 +4,20 @@ import java.util.List;
 
 public class Parser {
 
-    private List<String[]> commands = new ArrayList<>();
+    private final List<String[]> commands = new ArrayList<>();
 
     public Parser(String input) {
-        final String EOL = System.getProperty("line.separator");
+        String EOL = System.getProperty("line.separator");
         String[] output = input.split(EOL);
 
-        commands = Arrays.stream(output)
-                    .map(String::strip)
-                    .filter(s -> s.indexOf("//") != 0 && !s.isEmpty())
-                    .map(s -> s.split(" "))
-                    .toList();
+        for (String otp : output) {
+            otp = otp.strip();
+
+            if (otp.indexOf("//") != 0 && !otp.isEmpty()) {
+                String[] parts = otp.split(" ");
+                commands.add(parts);
+            }
+        }
     }
 
     public Boolean hasMoreCommands() {
