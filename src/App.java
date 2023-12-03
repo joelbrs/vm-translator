@@ -72,7 +72,7 @@ public class App {
     }
 
     public static void main(String[] args) {
-        String path = "projects\\07\\MemoryAccess\\BasicTest";
+        String path = "projects\\07\\MemoryAccess\\StaticTest";
 
         if (path.isEmpty()) {
             System.err.println("Please provide a single file path argument.");
