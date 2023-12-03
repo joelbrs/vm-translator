@@ -57,7 +57,7 @@ public class App {
                     code.writePop(command.getArgs().get(0), Integer.parseInt(command.getArgs().get(1)));
                     break;
                 default:
-                    System.out.println(command.getType().toString()+" not implemented");
+                    System.out.println(command.getType().toString() + " not implemented");
             }
         }
     }
