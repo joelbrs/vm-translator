@@ -1,95 +1,90 @@
-@3030
+@3030 // push constant 3030
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-@THIS
-D=A
-@R13
-M=D
-@SP
-AM=M-1
+@SP // pop pointer 0
+M=M-1
+A=M
 D=M
-@R13
-A=M
+@R3
 M=D
-@3040
+@3040 // push constant 3040
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-@THAT
-D=A
-@R13
-M=D
-@SP
-AM=M-1
+@SP // pop pointer 1
+M=M-1
+A=M
 D=M
-@R13
-A=M
+@R4
 M=D
-@32
+@32 // push constant 32
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-@THIS
+@THIS // pop this 2
 D=M
 @2
 D=D+A
 @R13
 M=D
 @SP
-AM=M-1
+M=M-1
+A=M
 D=M
 @R13
 A=M
 M=D
-@46
+@46 // push constant 46
 D=A
 @SP
 A=M
 M=D
 @SP
 M=M+1
-@THAT
+@THAT // pop that 6
 D=M
 @6
 D=D+A
 @R13
 M=D
 @SP
-AM=M-1
+M=M-1
+A=M
 D=M
 @R13
 A=M
 M=D
-@THIS
+@R3 // push pointer 0
 D=M
 @SP
 A=M
 M=D
 @SP
 M=M+1
-@THAT
+@R4 // push pointer 1
 D=M
 @SP
 A=M
 M=D
 @SP
 M=M+1
-@SP
-AM=M-1
+@SP // add
+M=M-1
+A=M
 D=M
 A=A-1
-M=M+D
-@THIS
+M=D+M
+@THIS // push this 2
 D=M
 @2
 A=D+A
@@ -99,12 +94,13 @@ A=M
 M=D
 @SP
 M=M+1
-@SP
-AM=M-1
+@SP // sub
+M=M-1
+A=M
 D=M
 A=A-1
 M=M-D
-@THAT
+@THAT // push that 6
 D=M
 @6
 A=D+A
@@ -114,8 +110,9 @@ A=M
 M=D
 @SP
 M=M+1
-@SP
-AM=M-1
+@SP // add
+M=M-1
+A=M
 D=M
 A=A-1
-M=M+D
+M=D+M
