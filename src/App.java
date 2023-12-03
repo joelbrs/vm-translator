@@ -65,6 +65,15 @@ public class App {
                 case LABEL:
                     code.writeLabel(command.getArgs().get(0));
                     break;
+                case CALL:
+                    code.writeCall(command.getArgs().get(0), Integer.parseInt(command.getArgs().get(1)));
+                    break;
+                case FUNCTION:
+                    code.writeFunction(command.getArgs().get(0), Integer.parseInt(command.getArgs().get(1)));
+                    break;
+                case RETURN:
+                    code.writeReturn();
+                    break;
                 default:
                     System.out.println(command.getType().toString() + " not implemented");
             }
