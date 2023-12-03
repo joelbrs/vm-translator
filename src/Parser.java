@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Parser {
 
-    private final List<String[]> commands;
+    private List<String[]> commands = new ArrayList<>();
 
     public Parser(String input) {
         final String EOL = System.getProperty("line.separator");
@@ -22,6 +22,6 @@ public class Parser {
     }
 
     public Command nextCommand() {
-        return new Command();
+        return new Command(commands.remove(0));
     }
 }

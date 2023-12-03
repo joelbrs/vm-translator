@@ -51,10 +51,10 @@ public class App {
                     code.writeArithmeticOr();
                     break;
                 case PUSH:
-                    //code.writePush(command.args.get(0), Integer.parseInt(command.args.get(1)));
+                    code.writePush(command.getArgs().get(0), Integer.parseInt(command.getArgs().get(1)));
                     break;
                 case POP:
-                    //code.writePop(command.args.get(0), Integer.parseInt(command.args.get(1)));
+                    code.writePop(command.getArgs().get(0), Integer.parseInt(command.getArgs().get(1)));
                     break;
                 default:
                     System.out.println(command.getType().toString()+" not implemented");
